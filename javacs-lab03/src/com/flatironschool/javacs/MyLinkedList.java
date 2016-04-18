@@ -86,6 +86,37 @@ public class MyLinkedList<E> implements List<E> {
 	@Override
 	public void add(int index, E element) {
 		// TODO: fill this in
+
+		if(index < 0 || size() < index) {
+			throw new IndexOutOfBoundsException();
+		}
+
+		Node freshNode = new Node(element);
+
+
+		if (index == 0) {
+			freshNode.next = head;
+			head = freshNode;
+
+		} else if (index == size()){
+			Node current = head;
+			while (current.next != null) {
+				current = current.next;
+			}
+			current.next = freshNode;
+		}
+
+		else {
+			Node current = head;
+				for (int i = 1; i < index; i++) {
+					current = current.next;
+				}
+
+			freshNode.next = current.next;
+			current.next = freshNode;
+		}
+
+		size++;
 	}
 
 	@Override
@@ -147,6 +178,18 @@ public class MyLinkedList<E> implements List<E> {
 	@Override
 	public int indexOf(Object target) {
 		// TODO: fill this in
+
+		Node cur = head;
+		int index = 0;
+
+		while (cur != null) {
+			if (equals(cur.cargo, target)) {
+				return index;
+			}
+			index++;
+			cur = cur.next;
+		}
+
 		return -1;
 	}
 
@@ -202,13 +245,55 @@ public class MyLinkedList<E> implements List<E> {
 	@Override
 	public boolean remove(Object obj) {
 		// TODO: fill this in
+
+
+		Node current = head;
+		if (current == null) {
+			return false;
+		} else if (equals(current.cargo, obj)) {
+			head = current.next;
+			size--;
+			return true;
+		}
+
+		while (current.next != null) {
+			if(equals(current.next.cargo, obj)) {
+				current.next = current.next.next;
+				size--;
+				return true;
+			}
+			current = current.next;
+		}
 		return false;
 	}
 
 	@Override
 	public E remove(int index) {
 		// TODO: fill this in
-		return null;
+
+		if (index < 0 || size() <= index) {
+			throw new IndexOutOfBoundsException();
+		}
+
+		Node current = head;
+
+		if (index == 0) {
+			head = current.next;
+		}
+
+		// j is the index of the NEXT node
+		int j = 1;
+		while (j < index && current != null) {
+			j++;
+			current = current.next;
+		}
+
+		Node old = current.next;
+		current.next = current.next.next;
+
+		size--;
+		return old.cargo;
+
 	}
 
 	@Override
